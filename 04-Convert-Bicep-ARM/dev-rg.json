@@ -1,0 +1,240 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "actionGroups_DevGA_name": {
+            "defaultValue": "DevGA",
+            "type": "String"
+        },
+        "sshPublicKeys_my_first_instance_key_name": {
+            "defaultValue": "my-first-instance_key",
+            "type": "String"
+        },
+        "storageAccounts_mystorageaccount7604_name": {
+            "defaultValue": "mystorageaccount7604",
+            "type": "String"
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.Compute/sshPublicKeys",
+            "apiVersion": "2025-04-01",
+            "name": "[parameters('sshPublicKeys_my_first_instance_key_name')]",
+            "location": "eastus",
+            "tags": {
+                "instance": "web"
+            },
+            "properties": {
+                "publicKey": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCwrFzDQwJEeghD1nAneBQXfGoYDHZoltSrRzNNKZYdsnKGvAjgwwHTBdZzzYVvnxtV4CuteprdW1D3XvmJpe9UQ3WUtj7smduf2FkUq5h5urNjMNTLidkqUvpqlYLjnm2rvxkS8/MNe7UMDFFeXkOgdYuAJgoy6MJvex758fw7qSRQmyH+eC0aEtnaz8eEb7R3c3fwI5EljP0jLp7FlvOOwCcFq/wBpJumgviE+g8h72nmIL5Z5QpmaQ7RyYlYRTZF2EmaUU68bPk/MKOTJ8q9xbI8uwLjpcxsWxkRe/9MSaldAEDB/YVkLjGqSpPZvf0C7mmmOOU9CNs3sObJFr0zaD4VlOpSDt7gOkcKkUgWjhbww03Scm9iW7gkcVGUXfMiPIoy+foTjsnAwKNWO5dbpG4GWhK2y5f0RKcOcgq1fDFKzI347U8RGHd27S2ahqtC9UQyO5KDfb9ui3evh3iP8PnDuQbSRe76j1SJ50XJHF7hBkd9bk24ijF+1A40/P0= generated-by-azure"
+            }
+        },
+        {
+            "type": "microsoft.insights/actionGroups",
+            "apiVersion": "2024-10-01-preview",
+            "name": "[parameters('actionGroups_DevGA_name')]",
+            "location": "eastus",
+            "tags": {
+                "env": "dev"
+            },
+            "properties": {
+                "groupShortName": "DevGrpAct",
+                "enabled": true,
+                "emailReceivers": [
+                    {
+                        "name": "[concat(parameters('actionGroups_DevGA_name'), '_-EmailAction-')]",
+                        "emailAddress": "larafa.akram@hotmail.fr",
+                        "useCommonAlertSchema": false
+                    }
+                ],
+                "smsReceivers": [],
+                "webhookReceivers": [],
+                "eventHubReceivers": [],
+                "itsmReceivers": [],
+                "azureAppPushReceivers": [],
+                "automationRunbookReceivers": [],
+                "voiceReceivers": [],
+                "logicAppReceivers": [],
+                "azureFunctionReceivers": [],
+                "armRoleReceivers": []
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts",
+            "apiVersion": "2025-06-01",
+            "name": "[parameters('storageAccounts_mystorageaccount7604_name')]",
+            "location": "eastus",
+            "sku": {
+                "name": "Standard_LRS",
+                "tier": "Standard"
+            },
+            "kind": "StorageV2",
+            "properties": {
+                "allowCrossTenantReplication": false,
+                "minimumTlsVersion": "TLS1_0",
+                "allowBlobPublicAccess": false,
+                "networkAcls": {
+                    "ipv6Rules": [],
+                    "bypass": "AzureServices",
+                    "virtualNetworkRules": [],
+                    "ipRules": [],
+                    "defaultAction": "Allow"
+                },
+                "supportsHttpsTrafficOnly": true,
+                "encryption": {
+                    "services": {
+                        "file": {
+                            "keyType": "Account",
+                            "enabled": true
+                        },
+                        "blob": {
+                            "keyType": "Account",
+                            "enabled": true
+                        }
+                    },
+                    "keySource": "Microsoft.Storage"
+                },
+                "accessTier": "Hot"
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts/blobServices",
+            "apiVersion": "2025-06-01",
+            "name": "[concat(parameters('storageAccounts_mystorageaccount7604_name'), '/default')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_mystorageaccount7604_name'))]"
+            ],
+            "sku": {
+                "name": "Standard_LRS",
+                "tier": "Standard"
+            },
+            "properties": {
+                "cors": {
+                    "corsRules": []
+                },
+                "deleteRetentionPolicy": {
+                    "allowPermanentDelete": false,
+                    "enabled": false
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts/fileServices",
+            "apiVersion": "2025-06-01",
+            "name": "[concat(parameters('storageAccounts_mystorageaccount7604_name'), '/default')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_mystorageaccount7604_name'))]"
+            ],
+            "sku": {
+                "name": "Standard_LRS",
+                "tier": "Standard"
+            },
+            "properties": {
+                "protocolSettings": {
+                    "smb": {}
+                },
+                "cors": {
+                    "corsRules": []
+                },
+                "shareDeleteRetentionPolicy": {
+                    "enabled": true,
+                    "days": 7
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts/queueServices",
+            "apiVersion": "2025-06-01",
+            "name": "[concat(parameters('storageAccounts_mystorageaccount7604_name'), '/default')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_mystorageaccount7604_name'))]"
+            ],
+            "properties": {
+                "cors": {
+                    "corsRules": []
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts/tableServices",
+            "apiVersion": "2025-06-01",
+            "name": "[concat(parameters('storageAccounts_mystorageaccount7604_name'), '/default')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_mystorageaccount7604_name'))]"
+            ],
+            "properties": {
+                "cors": {
+                    "corsRules": []
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts/blobServices/containers",
+            "apiVersion": "2025-06-01",
+            "name": "[concat(parameters('storageAccounts_mystorageaccount7604_name'), '/default/aks-deployment')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts/blobServices', parameters('storageAccounts_mystorageaccount7604_name'), 'default')]",
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_mystorageaccount7604_name'))]"
+            ],
+            "properties": {
+                "immutableStorageWithVersioning": {
+                    "enabled": false
+                },
+                "defaultEncryptionScope": "$account-encryption-key",
+                "denyEncryptionScopeOverride": false,
+                "publicAccess": "None"
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts/blobServices/containers",
+            "apiVersion": "2025-06-01",
+            "name": "[concat(parameters('storageAccounts_mystorageaccount7604_name'), '/default/akstfstate')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts/blobServices', parameters('storageAccounts_mystorageaccount7604_name'), 'default')]",
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_mystorageaccount7604_name'))]"
+            ],
+            "properties": {
+                "immutableStorageWithVersioning": {
+                    "enabled": false
+                },
+                "defaultEncryptionScope": "$account-encryption-key",
+                "denyEncryptionScopeOverride": false,
+                "publicAccess": "None"
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts/blobServices/containers",
+            "apiVersion": "2025-06-01",
+            "name": "[concat(parameters('storageAccounts_mystorageaccount7604_name'), '/default/mydata')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts/blobServices', parameters('storageAccounts_mystorageaccount7604_name'), 'default')]",
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_mystorageaccount7604_name'))]"
+            ],
+            "properties": {
+                "immutableStorageWithVersioning": {
+                    "enabled": false
+                },
+                "defaultEncryptionScope": "$account-encryption-key",
+                "denyEncryptionScopeOverride": false,
+                "publicAccess": "None"
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts/blobServices/containers",
+            "apiVersion": "2025-06-01",
+            "name": "[concat(parameters('storageAccounts_mystorageaccount7604_name'), '/default/tfstate')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts/blobServices', parameters('storageAccounts_mystorageaccount7604_name'), 'default')]",
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_mystorageaccount7604_name'))]"
+            ],
+            "properties": {
+                "immutableStorageWithVersioning": {
+                    "enabled": false
+                },
+                "defaultEncryptionScope": "$account-encryption-key",
+                "denyEncryptionScopeOverride": false,
+                "publicAccess": "None"
+            }
+        }
+    ]
+}

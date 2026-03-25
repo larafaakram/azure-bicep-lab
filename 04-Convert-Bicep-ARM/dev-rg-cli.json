@@ -1,0 +1,237 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "actionGroups_DevGA_name": {
+      "type": "String"
+    },
+    "sshPublicKeys_my_first_instance_key_name": {
+      "type": "String"
+    },
+    "storageAccounts_mystorageaccount7604_name": {
+      "type": "String"
+    }
+  },
+  "resources": [
+    {
+      "apiVersion": "2025-04-01",
+      "location": "eastus",
+      "name": "[parameters('sshPublicKeys_my_first_instance_key_name')]",
+      "properties": {
+        "publicKey": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCwrFzDQwJEeghD1nAneBQXfGoYDHZoltSrRzNNKZYdsnKGvAjgwwHTBdZzzYVvnxtV4CuteprdW1D3XvmJpe9UQ3WUtj7smduf2FkUq5h5urNjMNTLidkqUvpqlYLjnm2rvxkS8/MNe7UMDFFeXkOgdYuAJgoy6MJvex758fw7qSRQmyH+eC0aEtnaz8eEb7R3c3fwI5EljP0jLp7FlvOOwCcFq/wBpJumgviE+g8h72nmIL5Z5QpmaQ7RyYlYRTZF2EmaUU68bPk/MKOTJ8q9xbI8uwLjpcxsWxkRe/9MSaldAEDB/YVkLjGqSpPZvf0C7mmmOOU9CNs3sObJFr0zaD4VlOpSDt7gOkcKkUgWjhbww03Scm9iW7gkcVGUXfMiPIoy+foTjsnAwKNWO5dbpG4GWhK2y5f0RKcOcgq1fDFKzI347U8RGHd27S2ahqtC9UQyO5KDfb9ui3evh3iP8PnDuQbSRe76j1SJ50XJHF7hBkd9bk24ijF+1A40/P0= generated-by-azure"
+      },
+      "tags": {
+        "instance": "web"
+      },
+      "type": "Microsoft.Compute/sshPublicKeys"
+    },
+    {
+      "apiVersion": "2024-10-01-preview",
+      "location": "eastus",
+      "name": "[parameters('actionGroups_DevGA_name')]",
+      "properties": {
+        "armRoleReceivers": [],
+        "automationRunbookReceivers": [],
+        "azureAppPushReceivers": [],
+        "azureFunctionReceivers": [],
+        "emailReceivers": [
+          {
+            "emailAddress": "larafa.akram@hotmail.fr",
+            "name": "[concat(parameters('actionGroups_DevGA_name'), '_-EmailAction-')]",
+            "useCommonAlertSchema": false
+          }
+        ],
+        "enabled": true,
+        "eventHubReceivers": [],
+        "groupShortName": "DevGrpAct",
+        "itsmReceivers": [],
+        "logicAppReceivers": [],
+        "smsReceivers": [],
+        "voiceReceivers": [],
+        "webhookReceivers": []
+      },
+      "tags": {
+        "env": "dev"
+      },
+      "type": "microsoft.insights/actionGroups"
+    },
+    {
+      "apiVersion": "2025-06-01",
+      "kind": "StorageV2",
+      "location": "eastus",
+      "name": "[parameters('storageAccounts_mystorageaccount7604_name')]",
+      "properties": {
+        "accessTier": "Hot",
+        "allowBlobPublicAccess": false,
+        "allowCrossTenantReplication": false,
+        "encryption": {
+          "keySource": "Microsoft.Storage",
+          "services": {
+            "blob": {
+              "enabled": true,
+              "keyType": "Account"
+            },
+            "file": {
+              "enabled": true,
+              "keyType": "Account"
+            }
+          }
+        },
+        "minimumTlsVersion": "TLS1_0",
+        "networkAcls": {
+          "bypass": "AzureServices",
+          "defaultAction": "Allow",
+          "ipRules": [],
+          "ipv6Rules": [],
+          "virtualNetworkRules": []
+        },
+        "supportsHttpsTrafficOnly": true
+      },
+      "sku": {
+        "name": "Standard_LRS",
+        "tier": "Standard"
+      },
+      "type": "Microsoft.Storage/storageAccounts"
+    },
+    {
+      "apiVersion": "2025-06-01",
+      "dependsOn": [
+        "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_mystorageaccount7604_name'))]"
+      ],
+      "name": "[concat(parameters('storageAccounts_mystorageaccount7604_name'), '/default')]",
+      "properties": {
+        "cors": {
+          "corsRules": []
+        },
+        "deleteRetentionPolicy": {
+          "allowPermanentDelete": false,
+          "enabled": false
+        }
+      },
+      "sku": {
+        "name": "Standard_LRS",
+        "tier": "Standard"
+      },
+      "type": "Microsoft.Storage/storageAccounts/blobServices"
+    },
+    {
+      "apiVersion": "2025-06-01",
+      "dependsOn": [
+        "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_mystorageaccount7604_name'))]"
+      ],
+      "name": "[concat(parameters('storageAccounts_mystorageaccount7604_name'), '/default')]",
+      "properties": {
+        "cors": {
+          "corsRules": []
+        },
+        "protocolSettings": {
+          "smb": {}
+        },
+        "shareDeleteRetentionPolicy": {
+          "days": 7,
+          "enabled": true
+        }
+      },
+      "sku": {
+        "name": "Standard_LRS",
+        "tier": "Standard"
+      },
+      "type": "Microsoft.Storage/storageAccounts/fileServices"
+    },
+    {
+      "apiVersion": "2025-06-01",
+      "dependsOn": [
+        "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_mystorageaccount7604_name'))]"
+      ],
+      "name": "[concat(parameters('storageAccounts_mystorageaccount7604_name'), '/default')]",
+      "properties": {
+        "cors": {
+          "corsRules": []
+        }
+      },
+      "type": "Microsoft.Storage/storageAccounts/queueServices"
+    },
+    {
+      "apiVersion": "2025-06-01",
+      "dependsOn": [
+        "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_mystorageaccount7604_name'))]"
+      ],
+      "name": "[concat(parameters('storageAccounts_mystorageaccount7604_name'), '/default')]",
+      "properties": {
+        "cors": {
+          "corsRules": []
+        }
+      },
+      "type": "Microsoft.Storage/storageAccounts/tableServices"
+    },
+    {
+      "apiVersion": "2025-06-01",
+      "dependsOn": [
+        "[resourceId('Microsoft.Storage/storageAccounts/blobServices', parameters('storageAccounts_mystorageaccount7604_name'), 'default')]",
+        "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_mystorageaccount7604_name'))]"
+      ],
+      "name": "[concat(parameters('storageAccounts_mystorageaccount7604_name'), '/default/aks-deployment')]",
+      "properties": {
+        "defaultEncryptionScope": "$account-encryption-key",
+        "denyEncryptionScopeOverride": false,
+        "immutableStorageWithVersioning": {
+          "enabled": false
+        },
+        "publicAccess": "None"
+      },
+      "type": "Microsoft.Storage/storageAccounts/blobServices/containers"
+    },
+    {
+      "apiVersion": "2025-06-01",
+      "dependsOn": [
+        "[resourceId('Microsoft.Storage/storageAccounts/blobServices', parameters('storageAccounts_mystorageaccount7604_name'), 'default')]",
+        "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_mystorageaccount7604_name'))]"
+      ],
+      "name": "[concat(parameters('storageAccounts_mystorageaccount7604_name'), '/default/akstfstate')]",
+      "properties": {
+        "defaultEncryptionScope": "$account-encryption-key",
+        "denyEncryptionScopeOverride": false,
+        "immutableStorageWithVersioning": {
+          "enabled": false
+        },
+        "publicAccess": "None"
+      },
+      "type": "Microsoft.Storage/storageAccounts/blobServices/containers"
+    },
+    {
+      "apiVersion": "2025-06-01",
+      "dependsOn": [
+        "[resourceId('Microsoft.Storage/storageAccounts/blobServices', parameters('storageAccounts_mystorageaccount7604_name'), 'default')]",
+        "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_mystorageaccount7604_name'))]"
+      ],
+      "name": "[concat(parameters('storageAccounts_mystorageaccount7604_name'), '/default/mydata')]",
+      "properties": {
+        "defaultEncryptionScope": "$account-encryption-key",
+        "denyEncryptionScopeOverride": false,
+        "immutableStorageWithVersioning": {
+          "enabled": false
+        },
+        "publicAccess": "None"
+      },
+      "type": "Microsoft.Storage/storageAccounts/blobServices/containers"
+    },
+    {
+      "apiVersion": "2025-06-01",
+      "dependsOn": [
+        "[resourceId('Microsoft.Storage/storageAccounts/blobServices', parameters('storageAccounts_mystorageaccount7604_name'), 'default')]",
+        "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_mystorageaccount7604_name'))]"
+      ],
+      "name": "[concat(parameters('storageAccounts_mystorageaccount7604_name'), '/default/tfstate')]",
+      "properties": {
+        "defaultEncryptionScope": "$account-encryption-key",
+        "denyEncryptionScopeOverride": false,
+        "immutableStorageWithVersioning": {
+          "enabled": false
+        },
+        "publicAccess": "None"
+      },
+      "type": "Microsoft.Storage/storageAccounts/blobServices/containers"
+    }
+  ],
+  "variables": {}
+}
