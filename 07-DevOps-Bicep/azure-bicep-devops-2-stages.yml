@@ -16,8 +16,7 @@ stages:
   jobs:
   - job: scanWhatif
     displayName: scan and run whatif
-    pool:
-      vmImage: windows-2022
+    pool: my-runner
 
     steps:
     
