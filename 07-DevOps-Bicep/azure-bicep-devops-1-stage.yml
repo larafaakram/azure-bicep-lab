@@ -10,6 +10,7 @@ variables:
   templateFile: '03-Bicep-WebApp/webapp-linux.bicep'
 
 pool: my-runner
+  
 
 steps:
 
