@@ -36,6 +36,7 @@ stages:
         testResultsFormat: 'NUnit'
         testResultsFiles: '$(System.DefaultWorkingDirectory)\results\*-armttk.xml'
       condition: always()
+      
   - job: deployWhatif
     pool: my-runner
     steps:
