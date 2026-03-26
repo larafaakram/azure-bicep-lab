@@ -9,8 +9,7 @@ variables:
   webAppName: 'bicep00177604'
   templateFile: '03-Bicep-WebApp/webapp-linux.bicep'
 
-pool:
-  vmImage: 'ubuntu-latest'
+pool: my-runner
 
 steps:
 
