@@ -7,7 +7,7 @@ variables:
   resourceGroupName: 'rg-bicep-demo-00177604'
   location: 'westeurope'
   webAppName: 'bicep00177604'
-  templateFile: '03-Bicep-WebApp/webapp-linux.bicep'
+  templateFile: '03-Bicep-WebApp/webapp.bicep'
 
 pool: my-runner
   
