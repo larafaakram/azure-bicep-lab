@@ -18,7 +18,7 @@ steps:
   displayName: Preview Bicep Changes
   inputs:
     azureSubscription: 'Abonnement Azure 1(8710622f-f805-4919-9b79-dd2a976f3e16)'
-    scriptType: 'bash'
+    scriptType: 'ps'
     scriptLocation: 'inlineScript'
     inlineScript: |
       az --version
@@ -29,7 +29,7 @@ steps:
 - task: AzureCLI@2
   inputs:
     azureSubscription: 'Abonnement Azure 1(8710622f-f805-4919-9b79-dd2a976f3e16)'
-    scriptType: 'bash'
+    scriptType: 'ps'
     scriptLocation: 'inlineScript'
     inlineScript: |
       az --version
@@ -42,7 +42,7 @@ steps:
   displayName: Deploy Bicep To Azure
   inputs:
     azureSubscription: 'Abonnement Azure 1(8710622f-f805-4919-9b79-dd2a976f3e16)'
-    scriptType: 'bash'
+    scriptType: 'ps'
     scriptLocation: 'inlineScript'
     inlineScript: |
       az deployment group create --resource-group $(resourceGroupName) \
