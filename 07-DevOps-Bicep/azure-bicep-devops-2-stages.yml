@@ -48,9 +48,7 @@ stages:
         inlineScript: |
           az --version
           az group create --name $(resourceGroupName) --location $(location)
-          az deployment group what-if --resource-group $(resourceGroupName) \
-            --template-file $(templateFile) \
-            --parameters webAppName=$(webAppName)
+          az deployment group what-if --resource-group $(resourceGroupName) --template-file $(templateFile) --parameters webAppName=$(webAppName)
 
 - stage: deployBicep
   jobs:
@@ -80,6 +78,4 @@ stages:
         scriptType: 'ps'
         scriptLocation: 'inlineScript'
         inlineScript: |
-          az deployment group create --resource-group $(resourceGroupName) \
-            --template-file $(templateFile) \
-            --parameters webAppName=$(webAppName)
+          az deployment group create --resource-group $(resourceGroupName) --template-file $(templateFile) --parameters webAppName=$(webAppName)
