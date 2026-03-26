@@ -4,13 +4,12 @@ trigger: none
 # - main
 
 variables:
-  resourceGroupName: 'rg-bicep-demo-0023'
+  resourceGroupName: 'rg-bicep-demo-7604'
   location: 'westeurope'
-  webAppName: 'bicep0023'
-  templateFile: '01-bicep-webapp/webapp-linux.bicep'
+  webAppName: 'bicep007604'
+  templateFile: '03-Bicep-WebApp/webapp.bicep'
 
-pool:
-  vmImage: 'ubuntu-latest'
+pool: my-runner
 
 stages:
 - stage: preDeploy
@@ -25,7 +24,7 @@ stages:
     - task: RunARMTTKTests@1
       displayName: Scan Bicep files
       inputs:
-        templatelocation: '$(System.DefaultWorkingDirectory)\01-bicep-webapp'
+        templatelocation: '$(System.DefaultWorkingDirectory)\03-Bicep-WebApp'
         resultLocation: '$(System.DefaultWorkingDirectory)\results'
         allTemplatesMain: false
         cliOutputResults: true
@@ -37,12 +36,14 @@ stages:
         testResultsFormat: 'NUnit'
         testResultsFiles: '$(System.DefaultWorkingDirectory)\results\*-armttk.xml'
       condition: always()
-
+  - job: deployWhatif
+    pool: my-runner
+    steps:
     - task: AzureCLI@2
       displayName: Preview Bicep Changes
       inputs:
-        azureSubscription: 'Microsoft-Azure-0(17b12858-3960-4e6f-a663-a06fdae23428)'
-        scriptType: 'bash'
+        azureSubscription: 'Abonnement Azure 1(8710622f-f805-4919-9b79-dd2a976f3e16)'
+        scriptType: 'ps'
         scriptLocation: 'inlineScript'
         inlineScript: |
           az --version
@@ -62,22 +63,21 @@ stages:
     - task: ManualValidation@0
       timeoutInMinutes: 1440 # task times out in 1 day
       inputs:
-        notifyUsers: 'houssem.dellai@live.com'
+        notifyUsers: 'larafa.akram@hotmail.fr'
         instructions: 'Please validate the build $(Build.BuildId) configuration and resume'
         onTimeout: 'resume'
 
   - job: deployAzure
     displayName: deploy bicep to Azure
-    pool:
-      vmImage: 'ubuntu-latest'
+    pool: my-runner
     dependsOn: [waitForValidation]
 
     steps:
     - task: AzureCLI@2
       displayName: Deploy Bicep To Azure
       inputs:
-        azureSubscription: 'Microsoft-Azure-0(17b12858-3960-4e6f-a663-a06fdae23428)'
-        scriptType: 'bash'
+        azureSubscription: 'Abonnement Azure 1(8710622f-f805-4919-9b79-dd2a976f3e16)'
+        scriptType: 'ps'
         scriptLocation: 'inlineScript'
         inlineScript: |
           az deployment group create --resource-group $(resourceGroupName) \
