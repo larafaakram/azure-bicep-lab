@@ -23,9 +23,7 @@ steps:
     inlineScript: |
       az --version
       az group create --name $(resourceGroupName) --location $(location)
-      az deployment group what-if --resource-group $(resourceGroupName) \
-         --template-file $(templateFile) \
-         --parameters webAppName=$(webAppName)
+      az deployment group what-if --resource-group $(resourceGroupName) --template-file $(templateFile) --parameters webAppName=$(webAppName)
 - task: AzureCLI@2
   inputs:
     azureSubscription: 'Abonnement Azure 1(8710622f-f805-4919-9b79-dd2a976f3e16)'
@@ -34,9 +32,7 @@ steps:
     inlineScript: |
       az --version
       az group create --name $(resourceGroupName) --location $(location)
-      az deployment group what-if --resource-group $(resourceGroupName) \
-         --template-file $(templateFile) \
-         --parameters webAppName=$(webAppName)
+      az deployment group what-if --resource-group $(resourceGroupName) --template-file $(templateFile) --parameters webAppName=$(webAppName)
 
 - task: AzureCLI@2
   displayName: Deploy Bicep To Azure
@@ -45,6 +41,4 @@ steps:
     scriptType: 'ps'
     scriptLocation: 'inlineScript'
     inlineScript: |
-      az deployment group create --resource-group $(resourceGroupName) \
-         --template-file $(templateFile) \
-         --parameters webAppName=$(webAppName)
+      az deployment group create --resource-group $(resourceGroupName) --template-file $(templateFile) --parameters webAppName=$(webAppName)
