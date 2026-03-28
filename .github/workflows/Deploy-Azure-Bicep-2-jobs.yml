@@ -12,8 +12,8 @@ on:
   workflow_dispatch:
 
 env:
-  RESOURCE_GROUP: rg-bicep-github-actions-037
-  WEBAPP_NAME: bicep-037
+  RESOURCE_GROUP: rg-bicep-github-actions-7604
+  WEBAPP_NAME: bicep-7604
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -27,7 +27,7 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Login to Azure
-        uses: Azure/login@v1.4.3
+        uses: Azure/login@v1
         with:
           # Paste output of `az ad sp create-for-rbac` as value of secret variable: AZURE_CREDENTIALS
           creds: ${{ secrets.AZURE_CREDENTIALS }}
@@ -46,7 +46,7 @@ jobs:
         with:
           subscription: ${{ secrets.SUBSCRIPTION_ID  }} # Subscription ID
           resourceGroup: $RESOURCE_GROUP # Resource group name
-          templateFile: 01-bicep-webapp/webapp-linux.bicep # ARM template or Bicep file
+          templateFile: 03-Bicep-WebApp/webapp.bicep # ARM template or Bicep file
           # parametersFile: # optional # Parameters file for the ARM template or Bicep
           # Additional parameters to be applied on the ARM template or Bicep. Multiple parameters should be separated by spaces.
           additionalParameters: webAppName=$WEBAPP_NAME # optional
@@ -63,7 +63,7 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Login to Azure
-        uses: Azure/login@v1.4.3
+        uses: Azure/login@v1
         with:
           # Paste output of `az ad sp create-for-rbac` as value of secret variable: AZURE_CREDENTIALS
           creds: ${{ secrets.AZURE_CREDENTIALS }}
@@ -83,6 +83,6 @@ jobs:
         with:
           subscriptionId: ${{ secrets.SUBSCRIPTION_ID }}
           resourceGroupName: ${{ env.RESOURCE_GROUP }}
-          template: 01-bicep-webapp/webapp-linux.bicep
+          template: 03-Bicep-WebApp/webapp.bicep
           parameters: webAppName=${{ env.WEBAPP_NAME }}
           failOnStdErr: false
